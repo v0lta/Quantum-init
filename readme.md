@@ -6,15 +6,17 @@ The idea is to evaluate the quality of the pseudo-random
 numbers commonly used to set up neural networks before training.
 Quantum computers can produce perfect random numbers
 by measuring Hadamard-transformed QBits. 
-The `get_quantum_uniform` function from `qrandom.py` implements this.
+This an important difference from GPU or CPU randomness, which is 
+typically generated using some form of the Mersenne-Twister 
+(https://en.wikipedia.org/wiki/Mersenne_Twister).
+The `get_quantum_uniform` function from `qrandom.py` implements 
+a quantum random number generator.
 In the academic
 literature, this idea has previously appeared in
 https://link.springer.com/article/10.1007/s00500-019-04450-0 .
 The code in this repository repeats a variant of their 
 CNN experiment.
-This an important difference from GPU or CPU randomness, which is 
-typically generated using some form of the Mersenne-Twister 
-(https://en.wikipedia.org/wiki/Mersenne_Twister).
+
 
 ### Dependencies
 The code in the repository depends on Qiskit and PyTorch.
