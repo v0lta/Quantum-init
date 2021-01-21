@@ -211,6 +211,8 @@ def main():
         torch.save(model.state_dict(), "mnist_cnn.pt")
 
     plt.plot(test_loss_lst)
+    plt.xlabel('epochs')
+    plt.ylabel('test loss')
     if args.pseudo_init:
         plt.title('pseudo-random-init')
         plt.savefig('pseudornd.png')

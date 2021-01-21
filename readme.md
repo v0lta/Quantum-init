@@ -50,7 +50,7 @@ The second experiment will take a while, depending on the length of the quantum 
 The plots below show the test set network loss for both experiments. 
 
 ### Quantum-initialization-convergence:
-![Alt Text](qrnd.png)
+![Alt Text](./figures/qrnd.png)
 
 ### Pseudorandom-initialization-convergence:
-![Alt Text](pseudornd.png)
+![Alt Text](./figures/pseudornd.png)
