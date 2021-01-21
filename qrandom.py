@@ -57,7 +57,8 @@ def get_qrandom(shots, backend):
             else:
                 run_shots = shots_missing
 
-            print('qrnd_job', jobno, 'shots', run_shots, 'missing', shots_missing)
+            print('qrnd_job', jobno, 'shots', run_shots, 'missing',
+                  shots_missing)
 
             job = execute(circuit, backend, shots=run_shots,
                           memory=True)
@@ -69,7 +70,18 @@ def get_qrandom(shots, backend):
 
 
 def get_array(shape, backend=Aer.get_backend('qasm_simulator')):
-    # todo, bigger ints.
+    """Generates an array populated with uniformly distributed
+       numbers in [0, 1].
+
+    Args:
+        shape (tuple): The desired shape of the array.
+        backend: The Qiskit backend used the generate the
+                 random numbers.. Defaults to Aer.get_backend('qasm_simulator').
+
+    Returns:
+        [np.array]: An array filled with uniformly distributed numbers.
+    """    
+
     int_total = np.prod(shape)
     shot_total = np.ceil((16./5.)*int_total)
     mem = get_qrandom(shots=shot_total, backend=backend)
