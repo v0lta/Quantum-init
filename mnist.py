@@ -170,7 +170,7 @@ def main():
                         help='For Saving the current Model')
     parser.add_argument('--pseudo-init', action='store_true', default=False,
                         help='If True initialize using real qseudo randomnes')
-    parser.add_argument('--pickle_stats', action='store_true', default=False,
+    parser.add_argument('--pickle-stats', action='store_true', default=False,
                         help='If True stores test loss and acc in pickle file.')
     parser.add_argument('--qbits', type=int, default=5, metavar='N',
                         help='The number of qbits to use. Defaults to 5.')

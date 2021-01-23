@@ -73,7 +73,8 @@ def get_array(shape, n_qbits=5, backend=Aer.get_backend('qasm_simulator')):
         shape (tuple): The desired shape of the array.
         n_qbits: The number of qbits per machine. Defaults to 5.
         backend: The Qiskit backend used the generate the
-                 random numbers.. Defaults to Aer.get_backend('qasm_simulator').
+                 random numbers.
+                 Defaults to Aer.get_backend('qasm_simulator').
 
     Returns:
         [np.array]: An array filled with uniformly distributed numbers.
@@ -96,7 +97,7 @@ def get_array(shape, n_qbits=5, backend=Aer.get_backend('qasm_simulator')):
             int_lst.append(int(cint, 2))
             cint = ''
 
-    array = np.array(int_lst)
+    array = np.array(int_lst[:int_total])
     # move to [0, 1]
     array = array / np.power(2, 16)
     array = np.reshape(array, shape)
@@ -130,6 +131,7 @@ def get_quantum_uniform(shape, a, b,
 if __name__ == '__main__':
     import matplotlib.pyplot as plt
 
-    rnd_array = get_array([512, 512])
+    rnd_array = get_quantum_uniform([128, 128], a=-1., b=1.,
+                                    n_qbits=1)
     print(rnd_array.shape)
     print('done')

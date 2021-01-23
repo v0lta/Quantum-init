@@ -19,13 +19,20 @@ for exp in res:
 pseudo_acc = np.array(pseudo_acc)
 pseudo_loss = np.array(pseudo_loss)
 
+qntrand_acc = np.array(qntrnd_acc)
+qntrnd_loss = np.array(qntrnd_loss)
 
-acc_mean = np.mean(pseudo_acc, axis=0)
-acc_std = np.std(pseudo_acc, axis=0)
-x = np.array(range(len(acc_mean)))
-plt.errorbar(x, acc_mean, yerr=acc_std)
+pseudo_acc_mean = np.mean(pseudo_acc, axis=0)
+pseudo_acc_std = np.std(pseudo_acc, axis=0)
+x = np.array(range(len(pseudo_acc_mean)))
+qntrnd_acc_mean = np.mean(qntrnd_acc, axis=0)
+qntrnd_acc_std = np.std(qntrnd_acc, axis=0)
+
+plt.errorbar(x, pseudo_acc_mean, yerr=pseudo_acc_std, label='pseudo')
+plt.errorbar(x, qntrnd_acc_mean, yerr=qntrnd_acc_std, label='quantum')
 plt.ylabel('acc')
 plt.xlabel('epochs')
+plt.legend()
 plt.show()
 
 print('plots saved.')
