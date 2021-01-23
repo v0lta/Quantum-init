@@ -33,7 +33,8 @@ def _calculate_fan_in_and_fan_out(tensor):
 
 
 def kaiming_normal_(tensor, a=0, fan=None, nonlinearity='relu',
-                    quantum=False, backend=Aer.get_backend('qasm_simulator')):
+                    quantum=False, backend=Aer.get_backend('qasm_simulator'),
+                    qbits=5):
     if not fan:
         fan, _ = _calculate_fan_in_and_fan_out(tensor)
 
@@ -46,7 +47,8 @@ def kaiming_normal_(tensor, a=0, fan=None, nonlinearity='relu',
     else:
         quantum_random = get_quantum_uniform(tensor.shape,
                                              -bound, bound,
-                                             backend=backend)
+                                             backend=backend,
+                                             n_qbits=qbits)
         with torch.no_grad():
             tensor.data.copy_(
                 torch.from_numpy(quantum_random.astype(np.float16)))
@@ -56,7 +58,7 @@ class Net(nn.Module):
     """ Fully connected parameters have been reduced
         to reduce the number of random numbers required.
     """
-    def __init__(self, quantum_init=True):
+    def __init__(self, quantum_init=True, qbits=5):
         super(Net, self).__init__()
         self.conv1 = nn.Conv2d(1, 32, 3, stride=2)
         self.conv2 = nn.Conv2d(32, 64, 3, 1)
@@ -66,10 +68,12 @@ class Net(nn.Module):
         self.fc2 = nn.Linear(64, 10)
         self.quantum_init = quantum_init
         if self.quantum_init:
-            self.qbackend = get_backend()
+            self.qbits = qbits
+            self.qbackend = get_backend(self.qbits)
             # self.qbackend = Aer.get_backend('qasm_simulator')
         else:
             self.qbackend = None
+            self.qbits = None
 
         # initialize weights
         # loop over the parameters
@@ -83,7 +87,8 @@ class Net(nn.Module):
 
             kaiming_normal_(param, fan=fan,
                             quantum=self.quantum_init,
-                            backend=self.qbackend)
+                            backend=self.qbackend,
+                            qbits=self.qbits)
             previous_tensor = param
 
     def forward(self, x):
@@ -167,6 +172,9 @@ def main():
                         help='If True initialize using real qseudo randomnes')
     parser.add_argument('--pickle_stats', action='store_true', default=False,
                         help='If True stores test loss and acc in pickle file.')
+    parser.add_argument('--qbits', type=int, default=5, metavar='N',
+                        help='The number of qbits to use. Defaults to 5.')
+
 
     args = parser.parse_args()
     use_cuda = not args.no_cuda and torch.cuda.is_available()
