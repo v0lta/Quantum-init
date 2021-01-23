@@ -167,8 +167,7 @@ def main():
                         help='If True initialize using real qseudo randomnes')
     parser.add_argument('--pickle_stats', action='store_true', default=False,
                         help='If True stores test loss and acc in pickle file.')
-    
-    
+
     args = parser.parse_args()
     use_cuda = not args.no_cuda and torch.cuda.is_available()
 

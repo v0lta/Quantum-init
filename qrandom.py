@@ -9,8 +9,7 @@ from qiskit import IBMQ
 from qiskit.providers.ibmq import least_busy
 
 
-def get_backend():
-    nqubits = 5
+def get_backend(nqubits=5):
     IBMQ.load_account()
     provider = IBMQ.get_provider(hub='ibm-q')
     backend = least_busy(
@@ -22,11 +21,11 @@ def get_backend():
     return backend
 
 
-def get_qrandom(shots, backend, n_qubits=5):
+def get_qrandom(shots, backend, n_qbits=5):
     # Create a Quantum Circuit
-    circuit = QuantumCircuit(n_qubits)
+    circuit = QuantumCircuit(n_qbits)
     # Add a H gate on qubit 0
-    for q in range(n_qubits):
+    for q in range(n_qbits):
         circuit.h(q)
     # Map the quantum measurement to the classical bits
     # circuit.measure([0,1], [0,1])
@@ -66,13 +65,13 @@ def get_qrandom(shots, backend, n_qubits=5):
     return mem
 
 
-def get_array(shape, n_qubits=5, backend=Aer.get_backend('qasm_simulator')):
+def get_array(shape, n_qbits=5, backend=Aer.get_backend('qasm_simulator')):
     """Generates an array populated with uniformly distributed
        numbers in [0, 1].
 
     Args:
         shape (tuple): The desired shape of the array.
-        n_qubits: The number of qbits per machine. Defaults to 5.
+        n_qbits: The number of qbits per machine. Defaults to 5.
         backend: The Qiskit backend used the generate the
                  random numbers.. Defaults to Aer.get_backend('qasm_simulator').
 
@@ -81,9 +80,9 @@ def get_array(shape, n_qubits=5, backend=Aer.get_backend('qasm_simulator')):
     """
 
     int_total = np.prod(shape)
-    shot_total = np.ceil((16./n_qubits)*int_total)
+    shot_total = np.ceil((16./n_qbits)*int_total)
     mem = get_qrandom(shots=shot_total, backend=backend,
-                      n_qubits=n_qubits)
+                      n_qbits=n_qbits)
 
     bits_total = ''
     for m in mem:
@@ -105,7 +104,8 @@ def get_array(shape, n_qubits=5, backend=Aer.get_backend('qasm_simulator')):
 
 
 def get_quantum_uniform(shape, a, b,
-                        backend=Aer.get_backend('qasm_simulator')):
+                        backend=Aer.get_backend('qasm_simulator'),
+                        n_qbits=5):
     """ Get a numpy array with quantum uniformly initialized numbers
 
     Args:
@@ -114,11 +114,12 @@ def get_quantum_uniform(shape, a, b,
         b (float): The upper bound of the uniform distribution
         backend (optional): Quiskit backend for number generation.
             Defaults to Aer.get_backend('qasm_simulator').
+        n_qbits (int): The number of qbits to utilize.
 
     Returns:
         uniform (nparray): Array initialized to U(a, b).
     """
-    zero_one = get_array(shape, backend)
+    zero_one = get_array(shape, backend=backend, n_qbits=n_qbits)
     spread = np.abs(a) + np.abs(b)
     pos_array = zero_one * spread
     uniform = pos_array + a
