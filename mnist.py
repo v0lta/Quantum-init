@@ -175,8 +175,8 @@ def main():
     parser.add_argument('--qbits', type=int, default=5, metavar='N',
                         help='The number of qbits to use. Defaults to 5.')
 
-
     args = parser.parse_args()
+    print('args', args)
     use_cuda = not args.no_cuda and torch.cuda.is_available()
 
     torch.manual_seed(args.seed)
@@ -197,9 +197,9 @@ def main():
         transforms.Normalize((0.1307,), (0.3081,))
         ])
     dataset1 = datasets.MNIST('../data', train=True, download=True,
-                       transform=transform)
+                              transform=transform)
     dataset2 = datasets.MNIST('../data', train=False,
-                       transform=transform)
+                              transform=transform)
     train_loader = torch.utils.data.DataLoader(dataset1,**train_kwargs)
     test_loader = torch.utils.data.DataLoader(dataset2, **test_kwargs)
 
@@ -208,7 +208,7 @@ def main():
         model = Net(quantum_init=False).to(device)
     else:
         print('initializing using quantum randomness.')
-        model = Net(quantum_init=True).to(device)
+        model = Net(quantum_init=True, qbits=args.qbits).to(device)
     optimizer = optim.Adadelta(model.parameters(), lr=args.lr)
 
     scheduler = StepLR(optimizer, step_size=1, gamma=args.gamma)

@@ -10,18 +10,19 @@ from qiskit.providers.ibmq import least_busy
 
 
 def get_backend(nqubits=5):
-    IBMQ.load_account()
-    provider = IBMQ.get_provider(hub='ibm-q')
+    provider = IBMQ.load_account()
+    # provider = IBMQ.get_provider(hub='ibm-q')
     backend = least_busy(
         provider.backends(
             filters=lambda x: x.configuration().n_qubits >= nqubits
             and not x.configuration().simulator
             and x.status().operational is True))
+    # backend = provider.backends.ibmq_armonk
     print("least busy backend: ", backend)
     return backend
 
 
-def get_qrandom(shots, backend, n_qbits=5):
+def get_qrandom(shots, backend, n_qbits):
     # Create a Quantum Circuit
     circuit = QuantumCircuit(n_qbits)
     # Add a H gate on qubit 0
@@ -65,7 +66,7 @@ def get_qrandom(shots, backend, n_qbits=5):
     return mem
 
 
-def get_array(shape, n_qbits=5, backend=Aer.get_backend('qasm_simulator')):
+def get_array(shape, n_qbits, backend=Aer.get_backend('qasm_simulator')):
     """Generates an array populated with uniformly distributed
        numbers in [0, 1].
 
@@ -105,17 +106,17 @@ def get_array(shape, n_qbits=5, backend=Aer.get_backend('qasm_simulator')):
 
 
 def get_quantum_uniform(shape, a, b,
-                        backend=Aer.get_backend('qasm_simulator'),
-                        n_qbits=5):
+                        n_qbits=5,
+                        backend=Aer.get_backend('qasm_simulator')):
     """ Get a numpy array with quantum uniformly initialized numbers
 
     Args:
         shape (touple): Desired output array shape
         a (float): The lower bound of the uniform distribution
         b (float): The upper bound of the uniform distribution
+        n_qbits (int): The number of qbits to utilize.
         backend (optional): Quiskit backend for number generation.
             Defaults to Aer.get_backend('qasm_simulator').
-        n_qbits (int): The number of qbits to utilize.
 
     Returns:
         uniform (nparray): Array initialized to U(a, b).

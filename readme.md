@@ -58,3 +58,11 @@ The plots below show the test set network loss for both experiments.
 
 ### Pseudorandom-initialization-convergence:
 ![Alt Text](./figures/pseudornd.png)
+
+### Known issues:
+Occasionally IBMQ may assign you a machine, which produces non-uniform numbers.
+You can check your latest jobs at (https://quantum-computing.ibm.com/)
+All output bits should have the same probability.
+Otherwise, network convergence will likely be negatively affected.
+See the plot below for such an example:
+![Alt Text](./figures/problem.png)
