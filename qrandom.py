@@ -22,15 +22,12 @@ def get_backend():
     return backend
 
 
-def get_qrandom(shots, backend):
+def get_qrandom(shots, backend, n_qubits=5):
     # Create a Quantum Circuit
-    circuit = QuantumCircuit(5)
+    circuit = QuantumCircuit(n_qubits)
     # Add a H gate on qubit 0
-    circuit.h(0)
-    circuit.h(1)
-    circuit.h(2)
-    circuit.h(3)
-    circuit.h(4)
+    for q in range(n_qubits):
+        circuit.h(q)
     # Map the quantum measurement to the classical bits
     # circuit.measure([0,1], [0,1])
     circuit.measure_all()
@@ -69,22 +66,24 @@ def get_qrandom(shots, backend):
     return mem
 
 
-def get_array(shape, backend=Aer.get_backend('qasm_simulator')):
+def get_array(shape, n_qubits=5, backend=Aer.get_backend('qasm_simulator')):
     """Generates an array populated with uniformly distributed
        numbers in [0, 1].
 
     Args:
         shape (tuple): The desired shape of the array.
+        n_qubits: The number of qbits per machine. Defaults to 5.
         backend: The Qiskit backend used the generate the
                  random numbers.. Defaults to Aer.get_backend('qasm_simulator').
 
     Returns:
         [np.array]: An array filled with uniformly distributed numbers.
-    """    
+    """
 
     int_total = np.prod(shape)
-    shot_total = np.ceil((16./5.)*int_total)
-    mem = get_qrandom(shots=shot_total, backend=backend)
+    shot_total = np.ceil((16./n_qubits)*int_total)
+    mem = get_qrandom(shots=shot_total, backend=backend,
+                      n_qubits=n_qubits)
 
     bits_total = ''
     for m in mem:

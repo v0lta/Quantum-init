@@ -11,6 +11,7 @@ from torch.optim.lr_scheduler import StepLR
 from qrandom import get_quantum_uniform, get_backend
 from qiskit import Aer
 import matplotlib.pyplot as plt
+import pickle
 
 
 def _calculate_fan_in_and_fan_out(tensor):
@@ -135,7 +136,8 @@ def test(model, device, test_loader):
     print('\nTest set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
         test_loss, correct, len(test_loader.dataset),
         100. * correct / len(test_loader.dataset)))
-    return test_loss
+    test_acc = 100. * correct / len(test_loader.dataset)
+    return test_loss, test_acc
 
 
 def main():
@@ -163,6 +165,9 @@ def main():
                         help='For Saving the current Model')
     parser.add_argument('--pseudo-init', action='store_true', default=False,
                         help='If True initialize using real qseudo randomnes')
+    parser.add_argument('--pickle_stats', action='store_true', default=False,
+                        help='If True stores test loss and acc in pickle file.')
+    
     
     args = parser.parse_args()
     use_cuda = not args.no_cuda and torch.cuda.is_available()
@@ -201,10 +206,12 @@ def main():
 
     scheduler = StepLR(optimizer, step_size=1, gamma=args.gamma)
     test_loss_lst = []
+    test_acc_lst = []
     for epoch in range(1, args.epochs + 1):
         train(args, model, device, train_loader, optimizer, epoch)
-        epoch_test_loss = test(model, device, test_loader)
+        epoch_test_loss, epoch_acc_loss = test(model, device, test_loader)
         test_loss_lst.append(epoch_test_loss)
+        test_acc_lst.append(epoch_acc_loss)
         scheduler.step()
 
     if args.save_model:
@@ -219,6 +226,21 @@ def main():
     else:
         plt.title('quantum-random-init')
         plt.savefig('qrnd.png')
+
+    if args.pickle_stats:
+        try:
+            res = pickle.load(open("stats.pickle", "rb"))
+        except (OSError, IOError) as e:
+            res = []
+            print(e,
+                  'stats.pickle does not exist, creating a new file.')
+
+        res.append({'args': args,
+                    'test_loss_lst': test_loss_lst,
+                    'test_acc_lst': test_acc_lst})
+        pickle.dump(res, open("stats.pickle", "wb"))
+        print('stats.pickle saved.')
+
 
 if __name__ == '__main__':
     main()
