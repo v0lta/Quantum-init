@@ -26,7 +26,7 @@ def get_backend(nqubits=5):
             filters=lambda x: x.configuration().n_qubits >= nqubits
             and not x.configuration().simulator
             and x.status().operational is True))
-    backend = provider.backends.ibmq_armonk
+    # backend = provider.backends.ibmq_armonk
     # backend = Aer.get_backend('qasm_simulator')
     print("least busy backend: ", backend)
     return backend
