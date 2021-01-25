@@ -34,5 +34,5 @@ plt.ylabel('acc')
 plt.xlabel('epochs')
 plt.legend()
 plt.show()
-
+plt.savefig('random_eval.png')
 print('plots saved.')

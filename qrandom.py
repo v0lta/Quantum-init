@@ -10,19 +10,39 @@ from qiskit.providers.ibmq import least_busy
 
 
 def get_backend(nqubits=5):
+    """ Returns a quantum computation backend.
+
+    Args:
+        nqubits (int, optional): The number of desired qbits.
+                                 Defaults to 5.
+
+    Returns:
+        backend (qiskit.providers.ibmq.IBMQBackend): The device to run on.
+    """    
     provider = IBMQ.load_account()
     # provider = IBMQ.get_provider(hub='ibm-q')
-    backend = least_busy(
-        provider.backends(
-            filters=lambda x: x.configuration().n_qubits >= nqubits
-            and not x.configuration().simulator
-            and x.status().operational is True))
+    # backend = least_busy(
+    #    provider.backends(
+    #        filters=lambda x: x.configuration().n_qubits >= nqubits
+    #        and not x.configuration().simulator
+    #        and x.status().operational is True))
     # backend = provider.backends.ibmq_armonk
+    backend = Aer.get_backend('qasm_simulator')
     print("least busy backend: ", backend)
     return backend
 
 
 def get_qrandom(shots, backend, n_qbits):
+    """ Get a list of quantum random bits.
+
+    Args:
+        shots (int): The number of required circuit measurements.
+        backend (IBMQBackend): The device to run on.
+        n_qbits (int, optional): Number of available qbits. Defaults to 5.
+
+    Returns:
+        [list]: A list with uniformly distributed bits.
+    """   
     # Create a Quantum Circuit
     circuit = QuantumCircuit(n_qbits)
     # Add a H gate on qubit 0
