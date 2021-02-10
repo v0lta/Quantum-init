@@ -72,7 +72,7 @@ Should you find this project helpful please consider citing it.
 ```
 @misc{Wolter2021quantuminit,
 author = {Wolter, Moritz},
-title = {{Quantum initialization for CNN implemented using PyTorch and Qiskit}},
+title = {Quantum initialization for CNN implemented using PyTorch and Qiskit},
 year = {2021},
 howpublished = {\url{https://github.com/v0lta/Quantum-init}},
 note = {Accessed: [Insert date here]}
