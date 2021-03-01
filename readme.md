@@ -67,14 +67,3 @@ Otherwise, network convergence will likely be negatively affected.
 See the plot below for such an example:
 ![Alt Text](./figures/problem.png)
 
-### Citation
-Should you find this project helpful please consider citing it.
-```
-@misc{Wolter2021quantuminit,
-author = {Wolter, Moritz},
-title = {Quantum initialization for Convolutional Neural Networks using PyTorch and Qiskit},
-year = {2021},
-howpublished = {\url{https://github.com/v0lta/Quantum-init}},
-note = {Accessed: [Insert date here]}
-}
-```
